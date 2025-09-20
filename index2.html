@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rébus Mystère – Avishai</title>
+  <meta name="description" content="Un petit rébus pour deviner le prénom, puis révéler la réponse et la photo.">
+  <style>
+    :root{ --bg-start:#6a11cb; --bg-end:#2575fc; --card:#ffffff; --panel:#f3f4ff; --text:#0f172a; --muted:#64748b; --accent:#6d28d9; --accent-2:#111827; --gift-text:#ffffff; --border:#e5e7eb; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{ margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.6; color:var(--text); background:linear-gradient(135deg,var(--bg-start),var(--bg-end)) fixed; display:grid; place-items:start center; padding:24px; }
+    .card{ width:clamp(320px, 92vw, 940px); background:var(--card); border-radius:22px; box-shadow: 0 20px 60px rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.12); overflow:hidden; }
+    header{ padding:28px 28px 12px; }
+    header h1{ margin:0; font-size:clamp(1.35rem, 3.5vw, 1.9rem); letter-spacing:.2px; }
+    header .eyebrow{ display:flex; align-items:center; gap:.5rem; color:var(--accent); font-weight:700; margin-bottom:.25rem; }
+    .panel{ background:var(--panel); margin:16px 20px 20px; border-radius:16px; border:1px solid var(--border); padding:18px; }
+    .tiles{ display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap:14px; }
+    @media (max-width:720px){ .tiles{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
+    .tile{ background:#fff; border:1px solid var(--border); border-radius:14px; padding:26px 12px; display:grid; place-items:center; text-align:center; box-shadow:0 6px 14px rgba(0,0,0,.06); }
+    .tile .big{ font-size:clamp(2.1rem, 5.4vw, 2.8rem); line-height:1.1; font-weight:800; }
+    .tile .big.emoji{ font-weight:normal }
+    .equals{ background:transparent; border:0; box-shadow:none; font-size:clamp(2.1rem, 5.4vw, 2.8rem); font-weight:900; color:#111827; display:grid; place-items:center; }
+    .cta{ margin:16px 20px 22px; display:flex; justify-content:center; }
+    button.reveal{ appearance:none; border:2px solid transparent; background:linear-gradient(135deg, #16a34a, #22c55e); color:#fff; padding:14px 18px; font-size:1rem; font-weight:800; border-radius:12px; cursor:pointer; transition: transform .06s ease, box-shadow .2s ease, opacity .2s ease; box-shadow: 0 10px 24px rgba(22,163,74,.35); }
+    button.reveal:hover{ transform: translateY(-1px); }
+    button.reveal[disabled]{ opacity:.7; cursor:default; }
+    .answer{ margin:0 20px 24px; border:1px dashed var(--border); border-radius:14px; padding:16px; display:none; background:#fff; }
+    .answer.show{ display:block; animation:fade .5s ease forwards; }
+    .answer h2{ margin:0 0 .25rem 0; font-size:clamp(1.3rem, 3.2vw, 1.6rem); }
+    .answer p{ margin:.25rem 0 .75rem 0; color:var(--muted) }
+    .welcome{ font-weight:800; color:var(--text); font-size:clamp(1.4rem, 3.5vw, 1.8rem); margin:0 0 .5rem 0; }
+    figure{ margin:0; }
+    .photo{ width:100%; max-height:58vh; object-fit:cover; border-radius:12px; opacity:0; transform: translateY(4px); transition: opacity .6s ease, transform .6s ease; box-shadow:0 12px 28px rgba(0,0,0,.2); }
+    .answer.show .photo{ opacity:1; transform:none; }
+    .gift-link{ display:inline-flex; align-items:center; gap:.6rem; text-decoration:none; background:var(--accent-2); color:var(--gift-text); font-weight:800; padding:14px 16px; border-radius:14px; box-shadow:0 10px 24px rgba(2,6,23,.35); margin-top:14px; }
+    .gift-link::before{ content:"🎁"; }
+    footer{ padding:10px 20px 22px; text-align:center; color:#e9e9e9; font-size:.9rem; }
+    @keyframes fade{ from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: none; } }
+    @media (prefers-reduced-motion: reduce){ .photo{ transition:none } .answer.show{ animation:none } }
+  </style>
+</head>
+<body>
+  <div class="card" role="region" aria-label="Rébus Mystère">
+    <header>
+      <div class="eyebrow" aria-hidden="true">🎯 Rébus Mystère 🎯</div>
+      <h1>Déchiffrez ce rébus pour découvrir le prénom de notre petit trésor ! ✨</h1>
+    </header>
+
+    <section class="panel" aria-label="Rébus">
+      <div class="tiles" role="list">
+        <div class="tile" role="listitem"><div class="big">A</div></div>
+        <div class="tile" role="listitem"><div class="big emoji" aria-hidden="true">❤️</div></div>
+        <div class="tile" role="listitem"><div class="big emoji" aria-hidden="true">🤫</div></div>
+        <div class="tile" role="listitem"><div class="big emoji" aria-hidden="true">🧄</div></div>
+        <div class="tile equals" role="listitem" aria-label="égal">=</div>
+        <div class="tile equals" role="listitem" aria-label="point d'interrogation">?</div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <button class="reveal" id="revealBtn" aria-controls="answer" aria-expanded="false">Tu as trouvé ? Révéler</button>
+    </div>
+
+    <section id="answer" class="answer" aria-live="polite">
+      <h2 class="welcome">Bienvenue ✨</h2>
+      <p>Je m’appelle <strong>Avishai</strong>, enchanté 😉.</p>
+      <p>Mon prénom veut dire « cadeau de mon père ».</p>
+      <p>Je suis né le 18 septembre à <strong>11&nbsp;h&nbsp;42</strong> et je fais <strong>4,4&nbsp;kg</strong>.</p>
+      <p>Je mesure <strong>52,5&nbsp;cm</strong>.</p>
+      <figure>
+        <img class="photo" src="images/avishai.jpg" alt="Avishai, paisiblement endormi, emmitouflé dans une couverture.">
+      </figure>
+      <div>
+        <a class="gift-link" href="https://www.mesenvies.fr/liste-naissance/28798368" target="_blank" rel="noopener">Voir la liste de naissance</a>
+      </div>
+    </section>
+
+    <footer>Base visuelle prête pour GitHub Pages • Accessible & responsive</footer>
+  </div>
+
+  <script>
+    (function(){
+      const btn = document.getElementById('revealBtn');
+      const answer = document.getElementById('answer');
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        if(expanded) return;
+        answer.classList.add('show');
+        btn.setAttribute('aria-expanded', 'true');
+        btn.textContent = 'Révélé ✨';
+        btn.setAttribute('disabled','true');
+        const h2 = answer.querySelector('h2');
+        if(h2) h2.setAttribute('tabindex','-1'), h2.focus();
+      });
+    })();
+  </script>
+</body>
+</html>
