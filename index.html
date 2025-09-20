@@ -89,7 +89,7 @@
       btn.addEventListener('click', () => {
         if(btn.getAttribute('aria-expanded') === 'true') return;
         // Insère le prénom dynamiquement pour qu'il n'apparaisse pas dans l'aperçu/HTML statique
-        intro.innerHTML = 'Je m\u2019appelle <strong>Avishai</strong>, enchanté \u1F609.';
+        intro.innerHTML = "Je m’appelle <strong>Avishai</strong>, enchanté 😉.";
         answer.classList.add('show');
         btn.setAttribute('aria-expanded', 'true');
         btn.textContent = 'Révélé ✨';
